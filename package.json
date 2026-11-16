@@ -1,5 +1,5 @@
 {
-  "name": "Plugin Acode",
+  "name": "Plugin CodeSnap Acode",
   "version": "1.0.0",
   "description": "TypeScript template for Acode plugins",
   "main": "dist/main.js",

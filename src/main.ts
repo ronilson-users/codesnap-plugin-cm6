@@ -156,12 +156,12 @@ class AcodePlugin {
 
 function normalizeSelection(view: any, sel: any): string {
 	const line = view.state.doc.lineAt(sel.from);
-	const prefix = view.state.sliceDoc(line.from, sel.from);
-	const text = prefix.match(/^\s*/)![0] + view.state.sliceDoc(sel.from, sel.to);
-	const lines = text.split("\n");
-	const indents = lines.filter((l) => l.trim()).map((l) => l.match(/^[\t ]*/)![0].length);
+	const prefix: string = view.state.sliceDoc(line.from, sel.from);
+	const text: string = prefix.match(/^\s*/)![0] + view.state.sliceDoc(sel.from, sel.to);
+	const lines: string[] = text.split("\n");
+	const indents = lines.filter((l: string) => l.trim()).map((l: string) => l.match(/^[\t ]*/)![0].length);
 	const min = indents.length ? Math.min(...indents) : 0;
-	return lines.map((l) => l.slice(min)).join("\n");
+	return lines.map((l: string) => l.slice(min)).join("\n");
 }
 
 if ((window as any).acode) {
