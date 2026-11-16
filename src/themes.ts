@@ -15,7 +15,7 @@ export type TokenKey =
 	| "inserted" | "deleted" | "invalid";
 
 export const THEMES: SnapTheme[] = [
-	{ id: "editor", name: "Tema atual do editor", gradient: "linear-gradient(135deg,#667eea,#764ba2)" },
+	{ id: "editor", name: "Current editor theme", gradient: "linear-gradient(135deg,#667eea,#764ba2)" },
 	{
 		id: "dracula", name: "Dracula", bg: "#282a36", fg: "#f8f8f2",
 		gradient: "linear-gradient(135deg,#bd93f9,#ff79c6)",
@@ -50,9 +50,9 @@ export const THEMES: SnapTheme[] = [
 
 export const getTheme = (id: string) => THEMES.find((t) => t.id === id) ?? THEMES[0];
 
-// ---------------------------------------------------------------------------
+// --------------------------------------------
 // Mapeamento TokenKey -> seletores Lezer
-// ---------------------------------------------------------------------------
+// --------------------------------------------
 const TOKEN_SELECTORS: Record<TokenKey, string[]> = {
 	keyword: [
 		".tok-keyword", ".tok-modifier", ".tok-operatorKeyword",

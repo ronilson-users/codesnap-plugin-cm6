@@ -68,8 +68,8 @@ export function showPreview(opts: PreviewOptions): Promise<PreviewResult> {
 			b.style.cssText = `flex:1;padding:12px;border:0;border-radius:8px;background:${bg};color:#fff;font-size:15px`;
 			return b;
 		};
-		const cancel = btn("Cancelar", "#444");
-		const save = btn("Salvar", "#2e7d32");
+		const cancel = btn("Cancel", "#444");
+		const save = btn("Save", "#2e7d32");
 		const row = document.createElement("div");
 		row.style.cssText = "display:flex;gap:10px";
 		row.append(cancel, save);
@@ -96,7 +96,7 @@ export function showPreview(opts: PreviewOptions): Promise<PreviewResult> {
 				url = URL.createObjectURL(blob);
 				img.src = url;
 			} catch (e) {
-				console.error("[CodeSnap] prévia", e);
+				console.error("[CodeSnap] preview", e);
 				themeSel.value = themeId;
 				bgSel.value = backgroundId;
 			} finally {

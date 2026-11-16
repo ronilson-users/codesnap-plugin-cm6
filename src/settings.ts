@@ -19,6 +19,6 @@ export function saveSettings(s: SnapSettings) {
 	try {
 		localStorage.setItem(KEY, JSON.stringify(s));
 	} catch (e) {
-		console.error("[CodeSnap] não salvou config", e);
+		console.error("[CodeSnap] failed to save settings", e);
 	}
 }

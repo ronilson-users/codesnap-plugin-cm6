@@ -70,7 +70,7 @@ pre code,pre code *{background:transparent !important}
 	const img = new Image();
 	await new Promise<void>((res, rej) => {
 		img.onload = () => res();
-		img.onerror = () => rej(new Error("Falha ao renderizar o SVG"));
+		img.onerror = () => rej(new Error("Failed to render the SVG"));
 		img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 	});
 
@@ -82,6 +82,6 @@ pre code,pre code *{background:transparent !important}
 	ctx.drawImage(img, 0, 0);
 
 	return new Promise((res, rej) =>
-		canvas.toBlob((b) => (b ? res(b) : rej(new Error("toBlob falhou"))), "image/png"),
+		canvas.toBlob((b) => (b ? res(b) : rej(new Error("toBlob failed"))), "image/png"),
 	);
 }

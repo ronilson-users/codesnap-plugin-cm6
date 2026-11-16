@@ -3,6 +3,7 @@ import { renderSnap } from "./snap";
 import { THEMES, getTheme } from "./themes";
 import { BACKGROUNDS, getBackground } from "./backgrounds";
 import { loadSettings, saveSettings } from "./settings";
+
 import { showPreview } from "./preview";
 
 declare const acode: any;
@@ -27,7 +28,7 @@ class AcodePlugin {
 		this.commands = acode.require("commands");
 		this.commands.addCommand({
 			name: CMD_CAPTURE,
-			description: "CodeSnap: gerar imagem",
+			description: "CodeSnap: generate image",
 			bindKey: { win: "Ctrl-Alt-S", mac: "Command-Alt-S" },
 			exec: (view: any) => {
 				this.capture(view);
@@ -36,7 +37,7 @@ class AcodePlugin {
 		});
 		this.commands.addCommand({
 			name: CMD_SETTINGS,
-			description: "CodeSnap: configurações (tema e pasta)",
+			description: "CodeSnap: settings (theme and folder)",
 			exec: () => {
 				this.openSettings();
 				return true;
@@ -53,32 +54,32 @@ class AcodePlugin {
 	private async openSettings() {
 		const select = acode.require("select");
 		const settings = loadSettings();
-		const dirLabel = settings.dir ?? "Pictures (padrão)";
+		const dirLabel = settings.dir ?? "Pictures (default)";
 
 		const action = await select("CodeSnap", [
-			["theme", `Tema: ${getTheme(settings.theme).name}`],
-			["background", `Fundo: ${getBackground(settings.background).name}`],
-			["dir", `Pasta: ${dirLabel}`],
-			["resetDir", "Voltar para a pasta padrão"],
+			["theme", `Theme: ${getTheme(settings.theme).name}`],
+			["background", `Background: ${getBackground(settings.background).name}`],
+			["dir", `Folder: ${dirLabel}`],
+			["resetDir", "Reset to default folder"],
 		]);
 
 		if (action === "theme") {
 			const id = await select(
-				"Tema da imagem",
+				"Image theme",
 				THEMES.map((t) => [t.id, t.name]),
 				{ default: settings.theme },
 			);
 			if (id) saveSettings({ ...settings, theme: id });
 		} else if (action === "background") {
 			const id = await select(
-				"Fundo da imagem",
+				"Image background",
 				BACKGROUNDS.map((b) => [b.id, b.name]),
 				{ default: settings.background },
 			);
 			if (id) saveSettings({ ...settings, background: id });
 		} else if (action === "dir") {
 			const fileBrowser = acode.require("fileBrowser");
-			const picked = await fileBrowser("folder", "Escolha a pasta para salvar");
+			const picked = await fileBrowser("folder", "Choose the folder to save to");
 			if (picked?.url) saveSettings({ ...settings, dir: picked.url });
 		} else if (action === "resetDir") {
 			saveSettings({ ...settings, dir: null });
@@ -95,7 +96,7 @@ class AcodePlugin {
 			? view.state.doc.toString()
 			: normalizeSelection(view, sel);
 
-		if (!code.trim()) return toast("Nada para capturar");
+		if (!code.trim()) return toast("Nothing to capture");
 
 		const fileName: string = editorManager.activeFile?.filename ?? "snippet";
 		const language = fileName.includes(".") ? fileName.split(".").pop()! : "text";
@@ -129,10 +130,10 @@ class AcodePlugin {
 				});
 			}
 			const where = await this.save(result.blob, `codesnap-${Date.now()}.png`, settings.dir);
-			toast(`Salvo em ${where}`);
+			toast(`Saved to ${where}`);
 		} catch (e: any) {
 			console.error("[CodeSnap]", e);
-			toast("Erro: " + (e?.message ?? e));
+			toast("Error: " + (e?.message ?? e));
 		}
 	}
 

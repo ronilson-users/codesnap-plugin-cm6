@@ -1,0 +1,124 @@
+<style id="app-theme">:root {--popup-border-radius: 4px;--active-color: rgb(55, 142, 240);--active-text-color: rgb(255, 255, 255);--active-icon-color: rgba(0, 0, 0, 0.2);--border-color: rgba(255, 255, 255, 0.08);--box-shadow-color: rgba(0, 0, 0, 0.5);--button-active-color: rgb(38, 118, 210);--button-background-color: rgb(55, 142, 240);--button-text-color: rgb(255, 255, 255);--error-text-color: rgb(255, 140, 100);--success-text-color: rgb(22, 152, 44);--primary-color: rgb(22, 22, 24);--primary-text-color: rgb(235, 235, 240);--secondary-color: rgb(32, 32, 35);--secondary-text-color: rgb(155, 155, 165);--link-text-color: rgb(85, 165, 255);--scrollbar-color: rgba(255, 255, 255, 0.1);--popup-border-color: rgba(0, 0, 0, 0);--popup-icon-color: rgb(235, 235, 240);--popup-background-color: rgb(28, 28, 31);--popup-text-color: rgb(235, 235, 240);--popup-active-color: rgb(55, 142, 240);--danger-color: rgb(235, 70, 60);--danger-text-color: rgb(255, 255, 255);--file-tab-width: 120px;}</style>
+
+
+<style id="cm-static-highlight-styles">.cm-highlighted {
+  background: #0a0f1b;
+  color: #a5b3c4;
+}
+.cm-highlighted .tok-keyword { color: #10b1fe; }
+.cm-highlighted .tok-operator { color: #7a82da; }
+.cm-highlighted .tok-number { color: #ff78f8; }
+.cm-highlighted .tok-string { color: #fede71; }
+.cm-highlighted .tok-comment { color: #929292; font-style: italic; }
+.cm-highlighted .tok-variableName { color: #abb2bf; }
+.cm-highlighted .tok-propertyName { color: #3fc56b; }
+.cm-highlighted .tok-typeName { color: #ff6480; }
+.cm-highlighted .tok-className { color: #e5c07b; }
+.cm-highlighted .tok-function { color: #3fc56b; }
+.cm-highlighted .tok-bool { color: #9f7efe; }
+.cm-highlighted .tok-null { color: #9f7efe; }
+.cm-highlighted .tok-punctuation { color: #a5b3c4; }
+.cm-highlighted .tok-definition { color: #abb2bf; }
+.cm-highlighted .tok-labelName { color: #abb2bf; }
+.cm-highlighted .tok-namespace { color: #ff6480; }
+.cm-highlighted .tok-macroName { color: #10b1fe; }
+.cm-highlighted .tok-atom { color: #9f7efe; }
+.cm-highlighted .tok-meta { color: #a5b3c4; }
+.cm-highlighted .tok-heading { color: #abb2bf; font-weight: bold; }
+.cm-highlighted .tok-link { color: #3fc56b; text-decoration: underline; }
+.cm-highlighted .tok-strikethrough { text-decoration: line-through; }
+.cm-highlighted .tok-emphasis { font-style: italic; }
+.cm-highlighted .tok-strong { font-weight: bold; }
+.cm-highlighted .tok-invalid { color: #ff2e3f; }
+.cm-highlighted .tok-name { color: #abb2bf; }
+.cm-highlighted .tok-deleted { color: #ff2e3f; }
+.cm-highlighted .tok-inserted { color: #fede71; }
+.cm-highlighted .tok-changed { color: #ff78f8; }
+.ref-preview .tok-keyword { color: #10b1fe; }
+.ref-preview .tok-operator { color: #7a82da; }
+.ref-preview .tok-number { color: #ff78f8; }
+.ref-preview .tok-string { color: #fede71; }
+.ref-preview .tok-comment { color: #929292; font-style: italic; }
+.ref-preview .tok-variableName { color: #abb2bf; }
+.ref-preview .tok-propertyName { color: #3fc56b; }
+.ref-preview .tok-typeName { color: #ff6480; }
+.ref-preview .tok-className { color: #e5c07b; }
+.ref-preview .tok-function { color: #3fc56b; }
+.ref-preview .tok-bool { color: #9f7efe; }
+.ref-preview .tok-null { color: #9f7efe; }
+.ref-preview .tok-punctuation { color: #a5b3c4; }
+.ref-preview .tok-definition { color: #abb2bf; }
+.ref-preview .tok-labelName { color: #abb2bf; }
+.ref-preview .tok-namespace { color: #ff6480; }
+.ref-preview .tok-macroName { color: #10b1fe; }
+.ref-preview .tok-atom { color: #9f7efe; }
+.ref-preview .tok-meta { color: #a5b3c4; }
+.ref-preview .tok-heading { color: #abb2bf; font-weight: bold; }
+.ref-preview .tok-link { color: #3fc56b; text-decoration: underline; }
+.ref-preview .tok-strikethrough { text-decoration: line-through; }
+.ref-preview .tok-emphasis { font-style: italic; }
+.ref-preview .tok-strong { font-weight: bold; }
+.ref-preview .tok-invalid { color: #ff2e3f; }
+.ref-preview .tok-name { color: #abb2bf; }
+.ref-preview .tok-deleted { color: #ff2e3f; }
+.ref-preview .tok-inserted { color: #fede71; }
+.ref-preview .tok-changed { color: #ff78f8; }</style>
+
+
+<style id="backdrop-plugin-style">/* Backdrop */
+/* Frosted dialogs and menus */
+@supports (background-color: color-mix(in srgb, red 50%, transparent)) {
+	.prompt,
+	.context-menu,
+	#palette,
+	#hints,
+	.cursor-menu,
+	.cm-tooltip {
+		background-color: color-mix(in srgb, var(--popup-background-color, var(--secondary-color)) 80%, transparent) !important;
+		-webkit-backdrop-filter: blur(12px);
+		backdrop-filter: blur(12px);
+	}
+}
+
+/* Accent line on the active file tab */
+.open-file-list li.tile.active {
+	box-shadow: inset 0 2px 0 0 #ef4444;
+}
+@media (prefers-reduced-motion: no-preference) {
+		.open-file-list li.tile.active {
+			animation: backdrop-tab-glow 2.4s ease-in-out infinite alternate;
+		}
+		@keyframes backdrop-tab-glow {
+			from { box-shadow: inset 0 2px 0 0 #ef4444; }
+			to { box-shadow: inset 0 2px 0 0 #ef4444, 0 2px 10px -2px #ef4444; }
+		}
+	}
+	
+/* Quick tools button */
+#quicktools-toggler {
+	border-radius: 14px;
+	border: 3px solid transparent;
+	box-shadow: 0 0 14px 1px hsl(var(--backdrop-angle) 90% 60% / 0.55);
+	background: linear-gradient(var(--primary-color), var(--primary-color)) padding-box, conic-gradient(from var(--backdrop-angle), hsl(0 90% 58%), hsl(60 90% 58%), hsl(120 90% 58%), hsl(180 90% 58%), hsl(240 90% 58%), hsl(300 90% 58%), hsl(360 90% 58%)) border-box;
+}
+#quicktools-toggler:active {
+	filter: brightness(1.2);
+}
+@property --backdrop-angle {
+	syntax: "<angle>";
+	inherits: false;
+	initial-value: 0deg;
+}
+@media (prefers-reduced-motion: no-preference) {
+	#quicktools-toggler {
+		animation: backdrop-toggler-spin 5s linear infinite;
+	}
+	/* Acode hides the button with a class; there is nothing to animate then. */
+	#quicktools-toggler.hide {
+		animation-play-state: paused;
+	}
+	@keyframes backdrop-toggler-spin {
+		to { --backdrop-angle: 360deg; }
+	}
+}
+</style>
