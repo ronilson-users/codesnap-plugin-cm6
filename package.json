@@ -1,7 +1,7 @@
 {
-  "name": "Plugin CodeSnap Acode",
+  "name": "CodeSnap Acode Plugin",
   "version": "1.0.0",
-  "description": "TypeScript template for Acode plugins",
+  "description": "Turn your code into a clean, shareable PNG image, right from the Acode editor. CodeSnap renders the selected code (or the whole file) inside a window-style card with the file name, using the same syntax highlighting as your editor or one of the built-in themes.",
   "main": "dist/main.js",
   "repository": "",
   "author": "Ronilson Rsj",

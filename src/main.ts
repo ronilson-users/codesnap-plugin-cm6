@@ -1,3 +1,4 @@
+//
 import plugin from "../plugin.json";
 import { renderSnap } from "./snap";
 import { THEMES, getTheme } from "./themes";
@@ -31,7 +32,10 @@ class AcodePlugin {
 			description: "CodeSnap: generate image",
 			bindKey: { win: "Ctrl-Alt-S", mac: "Command-Alt-S" },
 			exec: (view: any) => {
-				this.capture(view);
+				this.capture(view).catch((e: any) => {
+					console.error("[CodeSnap]", e);
+					acode.require("toast")("CodeSnap: " + (e?.message ?? e));
+				});
 				return true;
 			},
 		});
@@ -39,15 +43,22 @@ class AcodePlugin {
 			name: CMD_SETTINGS,
 			description: "CodeSnap: settings (theme and folder)",
 			exec: () => {
-				this.openSettings();
+				this.openSettings().catch((e: any) => {
+					console.error("[CodeSnap]", e);
+					acode.require("toast")("CodeSnap: " + (e?.message ?? e));
+				});
 				return true;
 			},
 		});
 	}
 
 	async destroy() {
-		this.commands?.removeCommand(CMD_CAPTURE);
-		this.commands?.removeCommand(CMD_SETTINGS);
+		try {
+			this.commands?.removeCommand?.(CMD_CAPTURE);
+			this.commands?.removeCommand?.(CMD_SETTINGS);
+		} catch (e) {
+			console.error("[CodeSnap] destroy", e);
+		}
 	}
 
 	// ---------- Configurações ----------
@@ -67,20 +78,19 @@ class AcodePlugin {
 			const id = await select(
 				"Image theme",
 				THEMES.map((t) => [t.id, t.name]),
-				{ default: settings.theme },
 			);
 			if (id) saveSettings({ ...settings, theme: id });
 		} else if (action === "background") {
 			const id = await select(
 				"Image background",
 				BACKGROUNDS.map((b) => [b.id, b.name]),
-				{ default: settings.background },
 			);
 			if (id) saveSettings({ ...settings, background: id });
 		} else if (action === "dir") {
 			const fileBrowser = acode.require("fileBrowser");
 			const picked = await fileBrowser("folder", "Choose the folder to save to");
-			if (picked?.url) saveSettings({ ...settings, dir: picked.url });
+			const url = typeof picked === "string" ? picked : picked?.url;
+			if (url) saveSettings({ ...settings, dir: url });
 		} else if (action === "resetDir") {
 			saveSettings({ ...settings, dir: null });
 		}
@@ -96,10 +106,14 @@ class AcodePlugin {
 			? view.state.doc.toString()
 			: normalizeSelection(view, sel);
 
-		if (!code.trim()) return toast("Nothing to capture");
+		if (!code.trim()) {
+			toast("Nothing to capture");
+			return;
+		}
 
 		const fileName: string = editorManager.activeFile?.filename ?? "snippet";
-		const language = fileName.includes(".") ? fileName.split(".").pop()! : "text";
+		const extMatch = fileName.match(/\.([^./]+)$/);
+		const language = extMatch ? extMatch[1] : "text";
 		const settings = loadSettings();
 
 		try {
@@ -122,14 +136,21 @@ class AcodePlugin {
 			});
 			if (result.action !== "save") return;
 
-			if (result.themeId !== settings.theme || result.backgroundId !== settings.background) {
+			if (
+				result.themeId !== settings.theme ||
+				result.backgroundId !== settings.background
+			) {
 				saveSettings({
 					...settings,
 					theme: result.themeId,
 					background: result.backgroundId,
 				});
 			}
-			const where = await this.save(result.blob, `codesnap-${Date.now()}.png`, settings.dir);
+			const where = await this.save(
+				result.blob,
+				`codesnap-${Date.now()}.png`,
+				settings.dir,
+			);
 			toast(`Saved to ${where}`);
 		} catch (e: any) {
 			console.error("[CodeSnap]", e);
@@ -137,29 +158,56 @@ class AcodePlugin {
 		}
 	}
 
-	private async save(blob: Blob, name: string, dirUrl: string | null): Promise<string> {
+	private async save(
+		blob: Blob,
+		name: string,
+		dirUrl: string | null,
+	): Promise<string> {
 		const fs = acode.require("fsOperation");
 		let target = dirUrl;
 
 		if (!target) {
-			const root: string = cordova.file.externalRootDirectory;
+			const root: string | undefined = cordova?.file?.externalRootDirectory;
+			if (!root) throw new Error("External storage not available");
 			target = root + "Pictures";
 			const d = await fs(target);
-			if (!(await d.exists())) await (await fs(root)).createDirectory("Pictures");
+			if (!(await d.exists())) {
+				await (await fs(root)).createDirectory("Pictures");
+			}
 		}
 
 		const dir = await fs(target);
-		await dir.createFile(name, await blob.arrayBuffer());
-		return decodeURIComponent(target).split("/").slice(-2).join("/") + "/" + name;
+		const buf = await blobToArrayBuffer(blob);
+		await dir.createFile(name, buf);
+		return (
+			decodeURIComponent(target).split("/").slice(-2).join("/") + "/" + name
+		);
 	}
+}
+
+
+
+async function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
+	if (typeof (blob as any).arrayBuffer === "function") {
+		return (blob as any).arrayBuffer();
+	}
+	return new Promise<ArrayBuffer>((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = () => resolve(reader.result as ArrayBuffer);
+		reader.onerror = () => reject(reader.error ?? new Error("FileReader error"));
+		reader.readAsArrayBuffer(blob);
+	});
 }
 
 function normalizeSelection(view: any, sel: any): string {
 	const line = view.state.doc.lineAt(sel.from);
 	const prefix: string = view.state.sliceDoc(line.from, sel.from);
-	const text: string = prefix.match(/^\s*/)![0] + view.state.sliceDoc(sel.from, sel.to);
+	const text: string =
+		prefix.match(/^\s*/)![0] + view.state.sliceDoc(sel.from, sel.to);
 	const lines: string[] = text.split("\n");
-	const indents = lines.filter((l: string) => l.trim()).map((l: string) => l.match(/^[\t ]*/)![0].length);
+	const indents = lines
+		.filter((l: string) => l.trim())
+		.map((l: string) => l.match(/^[\t ]*/)![0].length);
 	const min = indents.length ? Math.min(...indents) : 0;
 	return lines.map((l: string) => l.slice(min)).join("\n");
 }
@@ -175,7 +223,14 @@ if ((window as any).acode) {
 			{ cacheFileUrl, cacheFile, firstInit, ctx, fileIcons }: any,
 		) => {
 			acodePlugin.baseUrl = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
-			await acodePlugin.init($page, cacheFile, cacheFileUrl, firstInit, ctx, fileIcons);
+			await acodePlugin.init(
+				$page,
+				cacheFile,
+				cacheFileUrl,
+				firstInit,
+				ctx,
+				fileIcons,
+			);
 		},
 	);
 

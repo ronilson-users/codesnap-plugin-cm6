@@ -1,22 +1,22 @@
 {
   "$schema": "https://acode.app/schema/plugin/v0.1.0.json",
-  "id": "com.rsj_rsetting.ts",
+  "id": "com.rsj_codesnap.acode",
   "name": "CodeSnap Acode",
   "main": "main.js",
   "version": "1.0.0",
-  "readme": "README.md",
+  "readme": "readme.md",
   "changelogs": "changelogs.md",
-  "repository": "https://github.com/ronilson-users/codesnap-plugin-cm6",
+  "repository": "https://github.com/ronilson-users/codesnap-plugin-cm6.git",
   "icon": "icon.png",
   "files": [],
-  "minVersionCode": 500,
+  "minVersionCode": 1000,
   "license": "MIT",
-  "keywords": [],
+  "keywords": ["snap", "screenshot","acode","codesnap"],
   "price": 0,
   "permissions": [],
   "author": {
     "name": "RSJ",
     "email": "ronilson.stos@gmail.com",
-    "github": "https://github.com/ronilson-users"
+    "github": "https://github.com/ronilson-users/codesnap-plugin-cm6.git"
   }
 }
