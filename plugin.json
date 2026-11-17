@@ -1,6 +1,6 @@
 {
   "$schema": "https://acode.app/schema/plugin/v0.1.0.json",
-  "id": "com.rsj_codesnap.acode",
+  "id": "com.rsj_codesnap.acode.ts",
   "name": "CodeSnap Acode",
   "main": "main.js",
   "version": "1.0.0",
